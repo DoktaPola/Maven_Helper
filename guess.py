@@ -5,10 +5,13 @@ rootdir = 'C:\\Users\\Полина\\Desktop\\MAVEN_HELPER\\org\\apache\\jena'
 
 def traverse_dir(file_path):
     my_array = []
+    snapshot_file = open('SNAPSHOT_FILE.txt', 'w')
     for subdir, dirs, files in os.walk(file_path):
         for file in files:
             if file.endswith('.pom'):
+                snapshot_file.write(file + '\n')
                 my_array.append(os.path.join(subdir, file))
+    snapshot_file.close()
     return my_array
 
 
