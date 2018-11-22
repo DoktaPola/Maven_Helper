@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 # rootdir = 'C:\\Users\\Полина\\Desktop\\MAVEN_HELPER\\org\\apache\\jena'
 
 
@@ -91,13 +92,16 @@ def main():
     user_mode = sys.argv[1]  # локально или удаленно
     path_to_maven_folder = sys.argv[3]
     path_to_file = sys.argv[2]
+    artifact = sys.argv[2]
     if user_mode == '--snapshot-maven-local-repo':
-        traverse_dir(path_to_maven_folder, path_to_file)  # получение 1ой переменной?
+        traverse_dir(path_to_maven_folder, path_to_file)
     elif user_mode == '--pack-missing-artifact-deps':
-
+        path_to_maven_folder = sys.argv[2]
+        path_to_file = sys.argv[3]
         var = traverse_dir(path_to_maven_folder, path_to_file)
         all_file = open_each_file(var)
         version = get_version(all_file)
+        var = traverse_dir(path_to_maven_folder, path_to_file)
         make_dict(var, version)
 
 

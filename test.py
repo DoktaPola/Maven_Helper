@@ -57,3 +57,5 @@ def get_version(arr):
 
 version = get_version(all_file)
 print(version)
+
+
