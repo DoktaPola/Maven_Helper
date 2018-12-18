@@ -114,7 +114,6 @@ def find_difference(local, deps):
 
 def zipdir(path, zip_file_name):
     for root, dirs, files in os.walk(path):
-        # zname = r'C:\MAVEN_HELPER\MY_AR.zip'   # как путь
         newzip = zipfile.ZipFile(zip_file_name, 'a')
         for file in files:
             newzip.write(root + os.sep + file)
@@ -122,18 +121,18 @@ def zipdir(path, zip_file_name):
 
 
 def main():
-    if len(sys.argv) == 0:
-        print('Please, enter a valid request!'
-              'If you want to use A LOCAL MODE, you should enter:'
-              ' (--snapshot-maven-local-repo, full path to your snapshot file,  full path to Maven folder.)'
-              'Example: --snapshot-maven-local-repo C:\\PycharmProjects\\MavenHelper\\SNAPSHOT (!!!ТУТ ВОПРОС!!!) C:\\MAVEN_HELPER\\local'
-              'If you want to use A REMOTE MODE, you should enter:'
-              '(--pack-missing-artifact-deps, missing library, full path to snapshot file, full path to Maven folder, full path where you want to your save finale archive.)'
-              'Example: --pack-missing-artifact-deps C:\\MAVEN_HELPER\\remote\\org\\apache\\jena\\jena-tdb2\\3.8.0 C:\\PycharmProjects\\MavenHelper\\SNAPSHOT (!!!ТУТ ВОПРОС!!!) C:\\MAVEN_HELPER\\remote C:\\MAVEN_HELPER\\MY_AR.zip')
+    help_message = '''Please, enter a valid request!'
+              If you want to use A LOCAL MODE, you should enter:
+               (--snapshot-maven-local-repo, full path to your snapshot file,  full path to Maven folder.)
+              Example: --snapshot-maven-local-repo .\\SNAPSHOT .\\local
+              If you want to use A REMOTE MODE, you should enter:
+              (--pack-missing-artifact-deps, missing library, full path to snapshot file, full path to Maven folder, 
+                 full path where you want to your save finale archive.)'
+              Example: --pack-missing-artifact-deps .\\remote\\org\\apache\\jena\\jena-tdb2\\3.8.0 .\\SNAPSHOT .\\remote .\\MY_AR.zip'''
 
+    if len(sys.argv) < 2:
+        print(help_message)
     else:
-        # user_mode = sys.argv[1]
-
         if sys.argv[1] == '--snapshot-maven-local-repo':
             path_to_file = sys.argv[2]
             path_to_maven_folder = sys.argv[3]
@@ -151,14 +150,11 @@ def main():
             for d in difference:
                 zipdir(path_to_maven_folder + os.sep + d, zip_file_name)
         else:
-            print('Please, enter a valid request!'
-                  'If you want to use A LOCAL MODE, you should enter:'
-                  ' (--snapshot-maven-local-repo, full path to your snapshot file,  full path to Maven folder.)'
-                  'Example: --snapshot-maven-local-repo C:\PycharmProjects\MavenHelper\SNAPSHOT (!!!ТУТ ВОПРОС!!!) C:\MAVEN_HELPER\local'
-                  'If you want to use A REMOTE MODE, you should enter:'
-                  '(--pack-missing-artifact-deps, missing library, full path to snapshot file, full path to Maven folder, full path where you want to your save finale archive.)'
-                  'Example: --pack-missing-artifact-deps C:\MAVEN_HELPER\remote\org\apache\jena\jena-tdb2\3.8.0 C:\PycharmProjects\MavenHelper\SNAPSHOT (!!!ТУТ ВОПРОС!!!) C:\MAVEN_HELPER\remote C:\MAVEN_HELPER\MY_AR.zip')
+            print(help_message)
 
 
 if __name__ == "__main__":
     main()
+
+
+# --pack-missing-artifact-deps C:\MAVEN_HELPER\remote\org\apache\jena\jena-tdb2\3.8.0 C:\Users\Полина\PycharmProjects\MavenHelper\SNAPSHOT C:\MAVEN_HELPER\remote C:\MAVEN_HELPER\MY_AR.zip
