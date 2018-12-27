@@ -16,9 +16,9 @@ def traverse_dir(file_path_in, file_path_out):
     return my_array
 
 
-def find_pom(file_path):
+def find_pom(root, file_path):
     pom_file = None
-    for subdir, dirs, files in os.walk(file_path):
+    for subdir, dirs, files in os.walk(root + os.sep + file_path):
         for file in files:
             if file.endswith('.pom'):
                 if pom_file:
@@ -56,15 +56,12 @@ def get_version(arr):
     for a in arr:
         all = ''
         if a.startswith('<groupId>'):
-            # group_id_splits = a[9:-10]
             group_id_splits = a.replace('<groupId>', '')
             group_id_splits = group_id_splits.replace('</groupId>', '')
         if a.startswith('<artifactId>'):
-            # artifact_id_splits = a[12:-13]
             artifact_id_splits = a.replace('<artifactId>', '')
             artifact_id_splits = artifact_id_splits.replace('</artifactId>', '')
         if a.startswith('<version>'):
-            # version_splits = a[9:-10]
             version_splits = a.replace('<version>', '')
             version_splits = version_splits.replace('</version>', '')
         if group_id_splits and artifact_id_splits and version_splits:
@@ -85,7 +82,7 @@ def depend_to_pom(deps):
 
 
 def make_rec(artifact, set_of_poms, path_to_maven_folder):
-    new_artifact = find_pom(artifact)
+    new_artifact = find_pom(path_to_maven_folder, artifact)
     if new_artifact:
         all_file = open_each_file(new_artifact)
         version = get_version(all_file)
@@ -142,7 +139,7 @@ def main():
             path_to_maven_folder = sys.argv[4]
             snapshot_file = sys.argv[3]
             zip_file_name = sys.argv[5]
-            zipdir(artifact, zip_file_name)
+            zipdir(path_to_maven_folder + os.sep + artifact, zip_file_name)
             set_of_poms = set()
             make_rec(artifact, set_of_poms, path_to_maven_folder)
             local_set = read_snap_file(snapshot_file)
