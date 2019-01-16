@@ -17,16 +17,26 @@ def traverse_dir(file_path_in, file_path_out):
 
 
 def find_pom(root, file_path):
+    missing_lab = sys.argv[2]
     pom_file = None
     for subdir, dirs, files in os.walk(root + os.sep + file_path):
         for file in files:
             if file.endswith('.pom'):
-                if pom_file:
-                    raise ValueError('Found more then one .pom file')  ## где то тут проблема
-                pom_file = os.path.join(subdir, file)
+                if is_valid_pom(file, missing_lab):
+                    pom_file = os.path.join(subdir, file)
     if not pom_file:
         raise ValueError('Found no .pom file')
     return pom_file
+
+
+def is_valid_pom(found_artifact, missing_lab):
+    parts = found_artifact.replace('.pom', '')
+    parts2 = missing_lab.split(os.sep)
+    str1 = ''
+    str1 += parts2[len(parts2) - 2] + "-" + parts2[len(parts2) - 1]
+    if str1 == parts:
+        return True
+    return False
 
 
 def open_each_file(art):
@@ -74,8 +84,11 @@ def depend_to_pom(deps):
     pom_paths = []
     for d in deps:
         parts = d.split(':')
-        for i in range(0, len(parts) - 1):
+        for i in range(0, len(parts) - 2):
             parts[i] = parts[i].replace('.', os.sep)
+        parts.append(parts[len(parts) - 2] + os.sep + parts[len(parts) - 1])
+        parts.remove(parts[1])
+        parts.remove(parts[1])
         s = os.sep.join(parts)
         pom_paths.append(s)
     return set(pom_paths)
