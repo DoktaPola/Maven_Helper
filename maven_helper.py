@@ -24,8 +24,6 @@ def find_pom(root, file_path):
             if file.endswith('.pom'):
                 if is_valid_pom(file, missing_lab):
                     pom_file = os.path.join(subdir, file)
-    if not pom_file:
-        raise ValueError('Found no .pom file')
     return pom_file
 
 
@@ -77,6 +75,7 @@ def get_version(arr):
         if group_id_splits and artifact_id_splits and version_splits:
             all += str(group_id_splits) + ":" + str(artifact_id_splits) + ":" + str(version_splits)
             all_versions.append(all)
+            group_id_splits = artifact_id_splits = version_splits = None
     return all_versions
 
 
@@ -115,7 +114,7 @@ def read_snap_file(snapshot):
 
 
 def find_difference(local, deps):
-    remote = depend_to_pom(deps)
+    remote = deps
     missed_in_local = remote.difference(local)
     if missed_in_local == 0:
         print('NO DEPENDENCES')
