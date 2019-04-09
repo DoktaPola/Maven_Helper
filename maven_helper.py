@@ -17,12 +17,11 @@ def traverse_dir(file_path_in, file_path_out):
 
 
 def find_pom(root, file_path):
-    missing_lab = sys.argv[2]
     pom_file = None
     for subdir, dirs, files in os.walk(root + os.sep + file_path):
         for file in files:
             if file.endswith('.pom'):
-                if is_valid_pom(file, missing_lab):
+                if is_valid_pom(file, file_path):
                     pom_file = os.path.join(subdir, file)
     return pom_file
 
