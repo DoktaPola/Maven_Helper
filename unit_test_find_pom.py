@@ -3,10 +3,6 @@ import unittest
 from unittest.mock import patch
 
 from maven_helper import find_pom
-from maven_helper import open_each_file
-# from new import get_version
-from maven_helper import make_rec
-from maven_helper import find_difference
 
 
 class TestMaven_Helper(unittest.TestCase):
@@ -43,24 +39,3 @@ class TestMaven_Helper(unittest.TestCase):
             (path, (), pom_file)
         ]
         self.assertRaises(ValueError, find_pom, path)
-# @patch('new.my_func')
-# def test_my_func(self, fun):
-#     """unit test when several .pom are in path"""
-#     fun.return_value = 'bbb'
-#     another_func()
-
-# def test_open_each_file(self):
-#     self.assertEqual(result[i], expected_res[i])
-#
-# def test_make_rec(self):
-#     self.assertEqual(result[i], expected_res[i])
-#
-# def test_find_difference(self):
-#     self.assertEqual(result[i], expected_res[i])
-
-# def test_empty_array(self):
-#     self.assertEqual(selection_sort([]), 'array is empty')
-
-#
-# if __name__ == '__main__':
-#     unittest.main()

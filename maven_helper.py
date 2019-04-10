@@ -163,6 +163,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# --pack-missing-artifact-deps C:\MAVEN_HELPER\remote\org\apache\jena\jena-tdb2\3.8.0 C:\Users\Полина\PycharmProjects\MavenHelper\SNAPSHOT C:\MAVEN_HELPER\remote C:\MAVEN_HELPER\MY_AR.zip
