@@ -36,7 +36,7 @@ def is_valid_pom(found_artifact, missing_lab):
     return False
 
 
-def open_each_file(art):
+def extract_pom_dependency_lines(art):
     all_depend = []
     f = open(art, 'r')
     lines = f.readlines()
@@ -55,12 +55,12 @@ def open_each_file(art):
     return all_depend
 
 
-def get_version(arr):
+def get_dependent_artifacts(dependency_blocks_lines):
     all_versions = []
     group_id_splits = None
     artifact_id_splits = None
     version_splits = None
-    for a in arr:
+    for a in dependency_blocks_lines:
         all = ''
         if a.startswith('<groupId>'):
             group_id_splits = a.replace('<groupId>', '')
@@ -78,7 +78,7 @@ def get_version(arr):
     return all_versions
 
 
-def depend_to_pom(deps):
+def dependent_artifacts_to_poms(deps):
     pom_paths = []
     for d in deps:
         parts = d.split(':')
@@ -92,15 +92,15 @@ def depend_to_pom(deps):
     return set(pom_paths)
 
 
-def make_rec(artifact, set_of_poms, path_to_maven_folder):
+def collect_dependent_poms(artifact, set_of_poms, path_to_maven_folder):
     new_artifact = find_pom(path_to_maven_folder, artifact)
     if new_artifact:
-        all_file = open_each_file(new_artifact)
-        version = get_version(all_file)
-        poms = depend_to_pom(version)
+        all_file = extract_pom_dependency_lines(new_artifact)
+        version = get_dependent_artifacts(all_file)
+        poms = dependent_artifacts_to_poms(version)
         for pom in poms:
             set_of_poms.add(pom)
-            make_rec(pom, set_of_poms, path_to_maven_folder)
+            collect_dependent_poms(pom, set_of_poms, path_to_maven_folder)
 
 
 def read_snap_file(snapshot):
@@ -116,7 +116,7 @@ def find_difference(local, deps):
     remote = deps
     missed_in_local = remote.difference(local)
     if missed_in_local == 0:
-        print('NO DEPENDENCES')
+        print('NO DEPENDENCIES')
     return missed_in_local
 
 
@@ -152,7 +152,7 @@ def main():
             zip_file_name = sys.argv[5]
             zipdir(path_to_maven_folder + os.sep + artifact, zip_file_name)
             set_of_poms = set()
-            make_rec(artifact, set_of_poms, path_to_maven_folder)
+            collect_dependent_poms(artifact, set_of_poms, path_to_maven_folder)
             local_set = read_snap_file(snapshot_file)
             difference = find_difference(local_set, set_of_poms)
             for d in difference:
